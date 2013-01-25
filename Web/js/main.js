@@ -1,6 +1,6 @@
 var ros;
 var ROS_ADDRESS = "127.0.0.1";
-var ROS_PORT = "9090";
+var ROS_PORT = "11311";
 
 var currentLinear = 0.0;
 var currentAngular = 0.0;
@@ -32,8 +32,8 @@ function initialize() {
 		});
 		
 		topicImageRaw = new ros.Topic({
-			name: 'rgb/image_raw',
-			messageType: 'sensor_msgs/Image'
+			name: '/camera/rgb/image_raw/compressed',
+			messageType: 'sensor_msgs/CompressedImage'
 		}).subscribe(function(message) {
 			$("#main div").hide(300);
 			console.log(message);
