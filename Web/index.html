@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>Telepresence test</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="js/eventemitter2.js" type="text/javascript"></script>
+		<script src="js/ros.min.js" type="text/javascript"></script>
+		<script src="js/main.js" type="text/javascript"></script>
+		
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="main">
+			<div class="error">Cannot find image feed.</div>
+			<img src="dummy.jpg" />
+		</div>
+		<div id="sidebar">
+			<h1>Some Title</h1>
+			<p>Use the controls below to control the robot. The images from the robot's camera are presented to your left.</p>
+			<p>You may also use your arrow keys.</p>
+			
+			<p id="error" class="error"></p>
+			
+			<div id="controls">
+				<div id="up">up</div>
+				<div id="down">down</div>
+				<div id="left">left</div>
+				<div id="right">right</div>
+				<span class="clear"></div>
+			</div>
+		</div>
+	</body>
+</html>
