@@ -2,7 +2,8 @@ var ros;
 var ROS_ADDRESS = "127.0.0.1";
 var ROS_PORT = "9090";
 
-var currentLinear = 0.0;
+var currentLinearX = 0.0;
+var currentLinearY = 0.0;
 var currentAngular = 0.0;
 
 var topicCmdVel;
@@ -28,7 +29,7 @@ function initialize() {
 		
 		topicCmdVel = new ros.Topic({
 			name: "/turtle1/command_velocity",
-			messageType: "turtlesim/Velocity" 
+			messageType: "geometry_msgs/Twist" 
 		});
 		
 		topicImageRaw = new ros.Topic({
@@ -48,12 +49,12 @@ function publishCmdVel() {
 	clearTimeout(publishTimer);
 	
 	topicCmdVel.publish({
-		linear: currentLinear,
-		angular: currentAngular
+		linear: {x: currentLinearX, y: currentLinearY, z: 0},
+		angular: {x: 0, y: 0, z: currentAngular}
 	});
 	
 	// if there is a velocity, keep on publishing
-	if(currentLinear != 0.0 || currentAngular != 0.0) {
+	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
 		publishTimer = setTimeout('publishCmdVel()', 200);
 	}
 }
@@ -71,15 +72,21 @@ $("document").ready(function() {
 		
 		switch($(this).attr('id')) {
 			case "up":
-				currentLinear = 1.0;
+				currentLinearX = 1.0;
 				break;
 			case "down":
-				currentLinear = -1.0;
+				currentLinearX = -1.0;
 				break;
 			case "left":
-				currentAngular = 1.0;
+				currentLinearY = 1.0;
 				break;
 			case "right":
+				currentLinearY = -1.0;
+				break;
+			case "cw":
+				currentAngular = 1.0;
+				break;
+			case "ccw":
 				currentAngular = -1.0;
 				break;
 		}
@@ -91,10 +98,14 @@ $("document").ready(function() {
 		switch($(this).attr('id')) {
 			case "up":
 			case "down":
-				currentLinear = 0.0;
+				currentLinearX = 0.0;
 				break;
 			case "left":
 			case "right":
+				currentLinaerY = 0.0;
+				break;
+			case "cw":
+			case "ccw":
 				currentAngular = 0.0;
 				break;
 		}
