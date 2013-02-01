@@ -1,6 +1,6 @@
 var ros;
 var ROS_ADDRESS = "127.0.0.1";
-var ROS_PORT = "11311";
+var ROS_PORT = "9090";
 
 var currentLinear = 0.0;
 var currentAngular = 0.0;
@@ -32,15 +32,16 @@ function initialize() {
 		});
 		
 		topicImageRaw = new ros.Topic({
-			name: '/camera/rgb/image_raw/compressed',
+			name: '/camera/rgb/image_color/compressed',
 			messageType: 'sensor_msgs/CompressedImage'
 		}).subscribe(function(message) {
-			$("#main div").hide(300);
-			console.log(message);
+			$("#main div").hide(0);
+			$("#main img").show(0);
 			parseImage(message.data);
-			console.log('received new image');
 		});
+
 	}
+	parseImage();
 }
 
 function publishCmdVel() {
@@ -58,12 +59,7 @@ function publishCmdVel() {
 }
 
 function parseImage(data) {
-	// attempt to parse the image and hoping the browsers can do it natively
-	// more resources: http://emilsblog.lerch.org/2009/07/javascript-hacks-using-xhr-to-load.html
-	// http://stackoverflow.com/questions/5601751/webservice-returns-binary-representation-of-an-image-javascript
-	// http://stackoverflow.com/questions/11089732/display-image-from-blob-using-javascript-and-websockets
-	
-	$("#main img").attr("src", "data:image/png;base64," + data);
+	$("#main img").attr("src", "data:image/jpeg;base64," + data);
 }
 
 $("document").ready(function() {
