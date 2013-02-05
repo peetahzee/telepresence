@@ -28,7 +28,7 @@ function initialize() {
 		});
 		
 		topicCmdVel = new ros.Topic({
-			name: "/turtle1/command_velocity",
+			name: "/test/command_velocity",
 			messageType: "geometry_msgs/Twist" 
 		});
 		
@@ -102,7 +102,7 @@ $("document").ready(function() {
 				break;
 			case "left":
 			case "right":
-				currentLinaerY = 0.0;
+				currentLinearY = 0.0;
 				break;
 			case "cw":
 			case "ccw":
