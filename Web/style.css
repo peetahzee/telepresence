@@ -57,17 +57,18 @@ html, body {
 	color: #ddd;
 }
 
-#sidebar #controls {
+#sidebar .controls {
 	width: 196px;
 	height: 130px;
-	margin: 0 auto;
 	padding: 10px;
 	box-sizing: border-box;
+	float:right;
+	margin-left: 10px;
 	
 	background: #444;
 }
 
-#sidebar #controls div {
+#sidebar #direction_buttons div {
 	height: 50px;
 	width: 52px;
 	margin: 0 10px 10px 0;
@@ -80,16 +81,51 @@ html, body {
 	-webkit-transition: 0.3s background-color;
 }
 
-#sidebar #controls div:nth-child(3), #sidebar #controls div:nth-child(6) {
+#sidebar #direction_buttons div:nth-child(3), #sidebar #direction_buttons div:nth-child(6) {
 	margin-right: 0;
 }
 
-#sidebar #controls div:hover {
+#sidebar #direction_buttons div:hover {
 	background-color: #666;
 }
 
-#sidebar #controls div.active {
+#sidebar #direction_buttons div.active {
 	background-color: #777;
+}
+#sidebar #direction_buttons span {
+	display: block;
+}
+
+#sidebar #joystick {
+	width: 210px;
+	height: 115px;
+}
+
+#sidebar #joystick > div {
+	width: 90px;
+	height: 90px;
+	background: #555;
+	float: left;
+	margin-right: 10px;
+	background: url("images/joystick_base.png");
+	position: relative;
+}
+
+#sidebar #joystick > div .stick {
+	position: absolute;
+	width: 35px;
+	height: 35px;
+	top: 27px;
+	left: 27px;
+	background: url("images/joystick_stick.png");
+	cursor: pointer;
+	-webkit-transition: 0.2s opacity;
+}
+#sidebar #joystick > div .stick:hover {
+	opacity: 0.8;
+}
+#sidebar #joystick > div:nth-child(2) {
+	margin: 0;
 }
 
 .error {

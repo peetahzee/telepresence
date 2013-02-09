@@ -59,16 +59,15 @@ function publishCmdVel() {
 
 function parseImage(data) {
 	// attempt to parse the image and hoping the browsers can do it natively
-	// more resources: http://emilsblog.lerch.org/2009/07/javascript-hacks-using-xhr-to-load.html
-	// http://stackoverflow.com/questions/5601751/webservice-returns-binary-representation-of-an-image-javascript
-	// http://stackoverflow.com/questions/11089732/display-image-from-blob-using-javascript-and-websockets
-	
 	$("#main img").attr("src", "data:image/png;base64," + data);
 }
 
 $("document").ready(function() {
 	//connect as soon as the document is done loading
 	initialize();
+
+	//disbable text selection
+	$("body").attr('unselectable','on').css('UserSelect','none').css('MozUserSelect','none');
 	
 	$("#controls div").mousedown(function() {
 		$(this).addClass("active");
@@ -137,5 +136,9 @@ $("document").ready(function() {
 				$("#controls #right").mouseup();
 				break;
 		}
+	});
+
+	$("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
+		console.log(deltaX + " / " + deltaY);
 	});
 });
