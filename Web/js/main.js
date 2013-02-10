@@ -1,8 +1,9 @@
 var ros;
 var ROS_ADDRESS = "127.0.0.1";
-var ROS_PORT = "11311";
+var ROS_PORT = "9090";
 
-var currentLinear = 0.0;
+var currentLinearX = 0.0;
+var currentLinearY = 0.0;
 var currentAngular = 0.0;
 
 var topicCmdVel;
@@ -27,39 +28,39 @@ function initialize() {
 		});
 		
 		topicCmdVel = new ros.Topic({
-			name: "/turtle1/command_velocity",
-			messageType: "turtlesim/Velocity" 
+			name: "/base_controller/command",
+			messageType: "geometry_msgs/Twist" 
 		});
 		
 		topicImageRaw = new ros.Topic({
-			name: '/camera/rgb/image_raw/compressed',
+			name: '/camera/rgb/image_color/compressed',
 			messageType: 'sensor_msgs/CompressedImage'
 		}).subscribe(function(message) {
-			$("#main div").hide(300);
-			console.log(message);
+			$("#main div").hide(0);
+			$("#main img").show(0);
 			parseImage(message.data);
-			console.log('received new image');
 		});
+
 	}
+	parseImage();
 }
 
 function publishCmdVel() {
 	clearTimeout(publishTimer);
 	
 	topicCmdVel.publish({
-		linear: currentLinear,
-		angular: currentAngular
+		linear: {x: currentLinearX, y: currentLinearY, z: 0},
+		angular: {x: 0, y: 0, z: currentAngular}
 	});
 	
 	// if there is a velocity, keep on publishing
-	if(currentLinear != 0.0 || currentAngular != 0.0) {
+	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
 		publishTimer = setTimeout('publishCmdVel()', 200);
 	}
 }
 
 function parseImage(data) {
-	// attempt to parse the image and hoping the browsers can do it natively
-	$("#main img").attr("src", "data:image/png;base64," + data);
+	$("#main img").attr("src", "data:image/jpeg;base64," + data);
 }
 
 $("document").ready(function() {
@@ -69,35 +70,45 @@ $("document").ready(function() {
 	//disbable text selection
 	$("body").attr('unselectable','on').css('UserSelect','none').css('MozUserSelect','none');
 	
-	$("#controls div").mousedown(function() {
+	$("#direction_buttons div").mousedown(function() {
 		$(this).addClass("active");
 		
 		switch($(this).attr('id')) {
 			case "up":
-				currentLinear = 1.0;
+				currentLinearX = 1.0;
 				break;
 			case "down":
-				currentLinear = -1.0;
+				currentLinearX = -1.0;
 				break;
 			case "left":
-				currentAngular = 1.0;
+				currentLinearY = 1.0;
 				break;
 			case "right":
+				currentLinearY = -1.0;
+				break;
+			case "cw":
 				currentAngular = -1.0;
+				break;
+			case "ccw":
+				currentAngular = 1.0;
 				break;
 		}
 		publishCmdVel();
 	});
 	
-	$("#controls div").mouseup(function() {
+	$("#direction_buttons div").mouseup(function() {
 		$(this).removeClass("active");
 		switch($(this).attr('id')) {
 			case "up":
 			case "down":
-				currentLinear = 0.0;
+				currentLinearX = 0.0;
 				break;
 			case "left":
 			case "right":
+				currentLinearY = 0.0;
+				break;
+			case "cw":
+			case "ccw":
 				currentAngular = 0.0;
 				break;
 		}
@@ -107,16 +118,16 @@ $("document").ready(function() {
 	$("body").keydown(function(event){
 		switch(event.keyCode) {
 			case 38:
-				$("#controls #up").mousedown();
+				$("#direction_buttons #up").mousedown();
 				break;
 			case 40:
-				$("#controls #down").mousedown();
+				$("#direction_buttons #down").mousedown();
 				break;
 			case 37:
-				$("#controls #left").mousedown();
+				$("#direction_buttons #left").mousedown();
 				break;
 			case 39:
-				$("#controls #right").mousedown();
+				$("#direction_buttons #right").mousedown();
 				break;
 		}
 	});
@@ -124,21 +135,39 @@ $("document").ready(function() {
 	$("body").keyup(function(event){
 		switch(event.keyCode) {
 			case 38:
-				$("#controls #up").mouseup();
+				$("#direction_buttons #up").mouseup();
 				break;
 			case 40:
-				$("#controls #down").mouseup();
+				$("#direction_buttons #down").mouseup();
 				break;
 			case 37:
-				$("#controls #left").mouseup();
+				$("#direction_buttons #left").mouseup();
 				break;
 			case 39:
-				$("#controls #right").mouseup();
+				$("#direction_buttons #right").mouseup();
 				break;
 		}
 	});
 
 	$("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
-		console.log(deltaX + " / " + deltaY);
+		// 27 = stickOffset
+		currentLinearX = -1 * deltaY / 27.0;
+		currentAngular = -1 * deltaX / 27.0;
+		publishCmdVel();
 	});
+
+	$("#right_joystick").on("joystickMove", function(e, deltaX, deltaY) {
+		// 27 = stickOffset
+		currentLinearX = -1 * deltaY / 27.0;
+		currentLinearY = -1 * deltaX / 27.0;
+		publishCmdVel();
+	});
+
+	$("#joystick > div").on("joystickRelease", function(e) {
+		currentLinearX = 0;
+		currentLinearY = 0;
+		currentAngular = 0;
+		publishCmdVel();
+	});
+
 });

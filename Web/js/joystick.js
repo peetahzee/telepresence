@@ -31,6 +31,7 @@ $("document").ready(function() {
 			$(document).unbind("mousemove");
 			stick.css("top", stickOffset);
 			stick.css("left", stickOffset);
+			joystickBase.trigger("joystickRelease");
 		});
 		
 		stickCenterX = $(this).offset().left + baseRadius / 2;
