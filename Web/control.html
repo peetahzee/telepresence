@@ -10,7 +10,7 @@
 		$("document").ready(function() {
 			//connect as soon as the document is done loading
 			initialize();
-			setCmdVelTopic("/base_controller/command");
+			setCmdVelTopic("/usc_mrp/control_command");
 			setImageTopic("/camera/rgb/image_color/compressed", $("#main div"), $("#main img"));
 
 			setUpDirectionButtons($("#direction_buttons div"))
