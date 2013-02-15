@@ -138,7 +138,11 @@ function setUpJoysticks(joystickDiv) {
 	joystickDiv.find("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
 		// 27 = stickOffset
 		currentLinearX = -1 * deltaY / 27.0;
-		currentAngular = -1 * deltaX / 27.0;
+		if(deltaY > 0) {
+			currentAngular = deltaX / 27.0
+		} else {
+			currentAngular = -1 * deltaX / 27.0;
+		}
 		publishCmdVel();
 	});
 
