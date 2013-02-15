@@ -7,7 +7,6 @@ var currentLinearY = 0.0;
 var currentAngular = 0.0;
 
 var topicCmdVel;
-var topicImageRaw;
 var publishTimer;
 
 function initialize() {
@@ -26,51 +25,36 @@ function initialize() {
 			ros = undefined;
 			$("#error").html("Connection to ROS host lost.");
 		});
-		
-		topicCmdVel = new ros.Topic({
-			name: "/base_controller/command",
-			messageType: "geometry_msgs/Twist" 
-		});
-		
-		topicImageRaw = new ros.Topic({
-			name: '/camera/rgb/image_color/compressed',
-			messageType: 'sensor_msgs/CompressedImage'
-		}).subscribe(function(message) {
-			$("#main div").hide(0);
-			$("#main img").show(0);
-			parseImage(message.data);
-		});
-
 	}
-	parseImage();
 }
 
-function publishCmdVel() {
-	clearTimeout(publishTimer);
-	
-	topicCmdVel.publish({
-		linear: {x: currentLinearX, y: currentLinearY, z: 0},
-		angular: {x: 0, y: 0, z: currentAngular}
+function setCmdVelTopic(topicName) {
+	topicCmdVel = new ros.Topic({
+		name: topicName,
+		/* DEFAULT name: "/base_controller/command", */
+		messageType: "geometry_msgs/Twist" 
 	});
-	
-	// if there is a velocity, keep on publishing
-	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
-		publishTimer = setTimeout('publishCmdVel()', 200);
-	}
+	return topicCmdVel;
 }
 
-function parseImage(data) {
-	$("#main img").attr("src", "data:image/jpeg;base64," + data);
+function setImageTopic(topicName, divElToHide, imgElToShow) {
+	 var topicImageRaw = new ros.Topic({
+	 	name: topicName,
+		/* DEFAULT name: '/camera/rgb/image_color/compressed', */
+		messageType: 'sensor_msgs/CompressedImage'
+	}).subscribe(function(message) {
+		divElToHide.hide(0);
+		imgElToShow.show(0);
+		// $("#main div").hide(0);
+		// $("#main img").show(0);
+		parseImage(message.data, imgElToShow);
+	});
+
+	return topicImageRaw;
 }
 
-$("document").ready(function() {
-	//connect as soon as the document is done loading
-	initialize();
-
-	//disbable text selection
-	$("body").attr('unselectable','on').css('UserSelect','none').css('MozUserSelect','none');
-	
-	$("#direction_buttons div").mousedown(function() {
+function setUpDirectionButtons(directionButtonDiv) {
+	directionButtonDiv.mousedown(function() {
 		$(this).addClass("active");
 		
 		switch($(this).attr('id')) {
@@ -96,7 +80,7 @@ $("document").ready(function() {
 		publishCmdVel();
 	});
 	
-	$("#direction_buttons div").mouseup(function() {
+	directionButtonDiv.mouseup(function() {
 		$(this).removeClass("active");
 		switch($(this).attr('id')) {
 			case "up":
@@ -148,26 +132,50 @@ $("document").ready(function() {
 				break;
 		}
 	});
+}
 
-	$("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
+function setUpJoysticks(joystickDiv) {
+	joystickDiv.find("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
 		// 27 = stickOffset
 		currentLinearX = -1 * deltaY / 27.0;
 		currentAngular = -1 * deltaX / 27.0;
 		publishCmdVel();
 	});
 
-	$("#right_joystick").on("joystickMove", function(e, deltaX, deltaY) {
+	joystickDiv.find("#right_joystick").on("joystickMove", function(e, deltaX, deltaY) {
 		// 27 = stickOffset
 		currentLinearX = -1 * deltaY / 27.0;
 		currentLinearY = -1 * deltaX / 27.0;
 		publishCmdVel();
 	});
 
-	$("#joystick > div").on("joystickRelease", function(e) {
+	joystickDiv.children("div").on("joystickRelease", function(e) {
 		currentLinearX = 0;
 		currentLinearY = 0;
 		currentAngular = 0;
 		publishCmdVel();
 	});
+}
 
-});
+function publishCmdVel() {
+	clearTimeout(publishTimer);
+
+	topicCmdVel.publish({
+		linear: {x: currentLinearX, y: currentLinearY, z: 0},
+		angular: {x: 0, y: 0, z: currentAngular}
+	});
+	
+	// if there is a velocity, keep on publishing
+	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
+		publishTimer = setTimeout('publishCmdVel()', 200);
+	}
+
+	console.log({linearX: currentLinearX, linearY: currentLinearY, angularZ: currentAngular});
+
+}
+
+function parseImage(data, imgEl) {
+	if(data != undefined) {
+		imgEl.attr("src", "data:image/jpeg;base64," + data);
+	}
+}

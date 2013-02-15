@@ -1,12 +1,11 @@
 <html>
 	<head>
-		<title>Telepresence test</title>
+		<title>Telepresence Control Panel</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="js/eventemitter2.js" type="text/javascript"></script>
 		<script src="js/ros.min.js" type="text/javascript"></script>
 		<script src="js/joystick.js" type="text/javascript"></script>
 		<script src="js/main.js" type="text/javascript"></script>
-
 		<script type="text/javascript">
 		$("document").ready(function() {
 			//connect as soon as the document is done loading
@@ -18,21 +17,27 @@
 			setUpJoysticks($("#joystick"));
 		});
 		</script>
-		
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body unselectable="on">
+	<body>
+		<div id="control_bar">Control Panel</div>
 		<div id="main">
-			<img src="images/dummy.jpg" />
+			<div id="feeds">
+				<div id="main_feed" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="feed_2" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="feed_3" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="feed_4" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="feed_5" class="feed"><img src="images/dummy.jpg" /></div>
+				<div class="clear"></div>
+			</div>
 		</div>
+
 		<div id="sidebar">
 			<div id="instructions">
-				<h1>Telepresence</h1>
-				<p>Use the controls below to control the robot. The images from the robot's camera are presented above.</p>
-				<p>You may also use your arrow keys.</p>
+				<h1>Control Panel</h1>
+				<p>Experiment staff only.</p>
 				<p id="error" class="error"></p>
 			</div>
-			
 			<div class="controls" id="direction_buttons">
 				<div id="ccw">&lt; ccw</div>
 				<div id="up">up</div>
@@ -52,6 +57,15 @@
 					<div class="stick"></div>
 				</div>
 				<span class="clear"></span>
+			</div>
+
+			<div class="controls" id="options">
+				<div class="allow_inputs">
+					<label for="allow_user_input_checkbox"><input type="checkbox" id="allow_user_input_checkbox" />Allow user input</label><br />
+					<label for="allow_cp_input_checkbox"><input type="checkbox" id="allow_cp_input_checkbox" />Allow control panel input</label>
+				</div>
+				<button id="reset_robot">Reset</button>
+				<button id="estop">Emergency Stop</button>
 			</div>
 		</div>
 	</body>
