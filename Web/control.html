@@ -15,6 +15,16 @@
 
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));
+
+			setAllowUserInputParam();
+			$("#allow_user_input_checkbox").change(function() {
+				paramAllowUserInput.set($(this).is(':checked'));
+			});
+
+			setAllowControlInputParam();
+			$("#allow_control_input_checkbox").change(function() {
+				paramAllowControlInput.set($(this).is(':checked'));
+			})
 		});
 		</script>
 		<link rel="stylesheet" href="style.css" />
