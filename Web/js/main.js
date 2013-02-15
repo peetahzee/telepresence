@@ -7,6 +7,8 @@ var currentLinearY = 0.0;
 var currentAngular = 0.0;
 
 var topicCmdVel;
+var paramAllowUserInput;
+var paramAllowControlInput;
 var publishTimer;
 
 function initialize() {
@@ -51,6 +53,14 @@ function setImageTopic(topicName, divElToHide, imgElToShow) {
 	});
 
 	return topicImageRaw;
+}
+
+function setAllowUserInputParam() {
+	paramAllowUserInput = new ros.Param({ name : 'allow_user_input'});
+}
+
+function setAllowControlInputParam() {
+	paramAllowControlInput = new ros.Param({ name : 'allow_control_input'});
 }
 
 function setUpDirectionButtons(directionButtonDiv) {
@@ -173,9 +183,6 @@ function publishCmdVel() {
 	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
 		publishTimer = setTimeout('publishCmdVel()', 200);
 	}
-
-	console.log({linearX: currentLinearX, linearY: currentLinearY, angularZ: currentAngular});
-
 }
 
 function parseImage(data, imgEl) {
