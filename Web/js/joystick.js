@@ -26,12 +26,14 @@ $("document").ready(function() {
 
 			joystickBase.trigger("joystickMove", [deltaX, deltaY]);
 		});
-		$(document).mouseup(function() {
+		$(document).bind("mouseup.joystickRelease", function() {
 			stickMouseDown = false;
 			$(document).unbind("mousemove");
+			$(document).unbind("mouseup.joystickRelease");
 			stick.css("top", stickOffset);
 			stick.css("left", stickOffset);
 			joystickBase.trigger("joystickRelease");
+
 		});
 		
 		stickCenterX = $(this).offset().left + baseRadius / 2;
