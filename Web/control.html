@@ -16,14 +16,26 @@
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));
 
-			setAllowUserInputParam();
+			setParamService();
+			// setAllowUserInputParam();
 			$("#allow_user_input_checkbox").change(function() {
-				paramAllowUserInput.set($(this).is(':checked'));
+				var isChecked = $(this).is(':checked');
+				paramService.callService(new ros.ServiceRequest({
+					topicName : 'allow_user_input', 
+					value : isChecked
+				}), function() { });
+				console.log("hello");
+				// paramAllowUserInput.set($(this).is(':checked'));
 			});
 
-			setAllowControlInputParam();
+			// setAllowControlInputParam();
 			$("#allow_control_input_checkbox").change(function() {
-				paramAllowControlInput.set($(this).is(':checked'));
+				var isChecked = $(this).is(':checked');
+				paramService.callService(new ros.ServiceRequest({
+					topicName : 'allow_control_input', 
+					value : isChecked
+				}), function() { });
+				// paramAllowControlInput.set($(this).is(':checked'));
 			})
 		});
 		</script>
@@ -72,7 +84,7 @@
 			<div class="controls" id="options">
 				<div class="allow_inputs">
 					<label for="allow_user_input_checkbox"><input type="checkbox" id="allow_user_input_checkbox" />Allow user input</label><br />
-					<label for="allow_cp_input_checkbox"><input type="checkbox" id="allow_cp_input_checkbox" />Allow control panel input</label>
+					<label for="allow_control_input_checkbox"><input type="checkbox" id="allow_control_input_checkbox" />Allow control panel input</label>
 				</div>
 				<button id="reset_robot">Reset</button>
 				<button id="estop">Emergency Stop</button>

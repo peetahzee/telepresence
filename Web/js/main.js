@@ -7,8 +7,9 @@ var currentLinearY = 0.0;
 var currentAngular = 0.0;
 
 var topicCmdVel;
-var paramAllowUserInput;
-var paramAllowControlInput;
+/* var paramAllowUserInput;
+var paramAllowControlInput; */
+var paramService;
 var publishTimer;
 
 function initialize() {
@@ -55,6 +56,10 @@ function setImageTopic(topicName, divElToHide, imgElToShow) {
 	return topicImageRaw;
 }
 
+function setParamService() {
+	paramService = new ros.Service({ name : '/usc_mrp/setParam', serviceType : '/usc_mrp/SetParam'});
+}
+/*
 function setAllowUserInputParam() {
 	paramAllowUserInput = new ros.Param({ name : 'allow_user_input'});
 }
@@ -62,6 +67,7 @@ function setAllowUserInputParam() {
 function setAllowControlInputParam() {
 	paramAllowControlInput = new ros.Param({ name : 'allow_control_input'});
 }
+*/
 
 function setUpDirectionButtons(directionButtonDiv) {
 	directionButtonDiv.mousedown(function() {
