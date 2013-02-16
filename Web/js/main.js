@@ -46,7 +46,7 @@ function setImageTopic(topicName, divElToHide, imgElToShow) {
 		/* DEFAULT name: '/camera/rgb/image_color/compressed', */
 		messageType: 'sensor_msgs/CompressedImage'
 	}).subscribe(function(message) {
-		divElToHide.hide(0);
+		if(divElToHide != null) { divElToHide.hide(0); }
 		imgElToShow.show(0);
 		// $("#main div").hide(0);
 		// $("#main img").show(0);
