@@ -11,7 +11,10 @@
 			//connect as soon as the document is done loading
 			initialize();
 			setCmdVelTopic("/usc_mrp/control_command");
-			setImageTopic("/camera/rgb/image_color/compressed", null, $("#main_feed img"));
+			setImageTopic("/usc_mrp/camera/user/compressed", null, $("#main_feed img"));
+			setImageTopic("/usc_mrp/camera/original/compressed", null, $("#feed_2 img"));
+			setImageTopic("/usc_mrp/camera/crop1/compressed", null, $("#feed_3 img"));
+			setImageTopic("/usc_mrp/camera/crop2/compressed", null, $("#feed_4 img"));
 
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));

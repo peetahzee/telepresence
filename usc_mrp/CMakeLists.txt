@@ -30,3 +30,4 @@ rosbuild_gensrv()
 #target_link_libraries(example ${PROJECT_NAME})
 
 rosbuild_add_executable(usc_mrp src/mrp.cpp)
+rosbuild_add_executable(image_republisher src/image_republisher.cpp)
