@@ -10,35 +10,34 @@
 		$("document").ready(function() {
 			//connect as soon as the document is done loading
 			initialize();
+
+			setParamService();
+			setUserViewService();
+			
 			setCmdVelTopic("/usc_mrp/control_command");
-			setImageTopic("/usc_mrp/camera/user/compressed", null, $("#main_feed img"));
-			setImageTopic("/usc_mrp/camera/original/compressed", null, $("#feed_2 img"));
-			setImageTopic("/usc_mrp/camera/crop1/compressed", null, $("#feed_3 img"));
-			setImageTopic("/usc_mrp/camera/crop2/compressed", null, $("#feed_4 img"));
+			setImageTopic("user", null, $("#main_feed img"));
+			setImageTopic("original", null, $("#feed_2 img"));
+			setImageTopic("crop1", null, $("#feed_3 img"));
+			setImageTopic("crop2", null, $("#feed_4 img"));
+			setImageTopic("quality1", null, $("#feed_5 img"));
 
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));
 
-			setParamService();
-			// setAllowUserInputParam();
 			$("#allow_user_input_checkbox").change(function() {
 				var isChecked = $(this).is(':checked');
 				paramService.callService(new ros.ServiceRequest({
 					topicName : 'allow_user_input', 
 					value : isChecked
 				}), function() { });
-				console.log("hello");
-				// paramAllowUserInput.set($(this).is(':checked'));
 			});
 
-			// setAllowControlInputParam();
 			$("#allow_control_input_checkbox").change(function() {
 				var isChecked = $(this).is(':checked');
 				paramService.callService(new ros.ServiceRequest({
 					topicName : 'allow_control_input', 
 					value : isChecked
 				}), function() { });
-				// paramAllowControlInput.set($(this).is(':checked'));
 			})
 		});
 		</script>
@@ -48,11 +47,13 @@
 		<div id="control_bar">Control Panel</div>
 		<div id="main">
 			<div id="feeds">
-				<div id="main_feed" class="feed"><img src="images/dummy.jpg" /></div>
-				<div id="feed_2" class="feed"><img src="images/dummy.jpg" /></div>
-				<div id="feed_3" class="feed"><img src="images/dummy.jpg" /></div>
-				<div id="feed_4" class="feed"><img src="images/dummy.jpg" /></div>
-				<div id="feed_5" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="main_feed" class="feed"><img src="images/dummy.jpg" /><div>User View</div></div>
+				<div id="feed_2" class="feed"><img src="images/dummy.jpg" /><div>Original</div></div>
+				<div id="feed_3" class="feed"><img src="images/dummy.jpg" /><div>Crop 1</div></div>
+				<div id="feed_4" class="feed"><img src="images/dummy.jpg" /><div>Crop 2</div></div>
+				<div id="feed_5" class="feed"><img src="images/dummy.jpg" /><div>Bad Quality 1</div></div>
+				<div id="feed_6" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="feed_7" class="feed"><img src="images/dummy.jpg" /></div>
 				<div class="clear"></div>
 			</div>
 		</div>

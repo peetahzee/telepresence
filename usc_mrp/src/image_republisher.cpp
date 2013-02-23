@@ -11,6 +11,9 @@ image_transport::Publisher pub_user;
 image_transport::Publisher pub_original;
 image_transport::Publisher pub_crop1;
 image_transport::Publisher pub_crop2;
+image_transport::Publisher pub_quality1;
+
+ros::NodeHandle *n;
 
 std::string userView = "original";
 
@@ -42,16 +45,24 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
   }
 
   pub_original.publish(cv_ptr->toImageMsg());
-  pub_user.publish(cv_ptr->toImageMsg());
+  if(userView == "original") { pub_user.publish(cv_ptr->toImageMsg()); }
   //cv::imshow("view", cv_ptr->image);
+
+  pub_quality1.publish(cv_ptr->toImageMsg());
+  n->setParam("/usc_mrp/camera/quality1/compressed/jpeg_quality", 10);
+
+  if(userView == "original") { pub_user.publish(cv_ptr->toImageMsg()); }
 
   cv::Mat image(cv_ptr->image);
   cv::Mat croppedImage = image(cv::Rect(cropLevels[0], cropLevels[0], 640 - cropLevels[0] * 2, 480 - cropLevels[0] * 2));
   publishCvMat(pub_crop1, cv_ptr, croppedImage);
+  if(userView == "crop1") { publishCvMat(pub_user, cv_ptr, croppedImage); }
   //cv::imshow("new view", croppedImage);
+
 
   croppedImage = image(cv::Rect(cropLevels[1], cropLevels[1], 640 - cropLevels[1] * 2, 480 - cropLevels[1] * 2));
   publishCvMat(pub_crop2, cv_ptr, croppedImage);
+  if(userView == "crop2") { publishCvMat(pub_user, cv_ptr, croppedImage); }
   //cv::imshow("new view 2", croppedImage);  
   
   //cv::waitKey(3);
@@ -61,7 +72,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
 int main(int argc, char **argv) {
   ros::init(argc, argv, "image_listener");
   ros::NodeHandle nh;
-
+  n = &nh;
+  
   ros::ServiceServer service = nh.advertiseService("/usc_mrp/setUserView", setUserView);
   image_transport::ImageTransport it(nh);
   image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1, imageCallback);
@@ -70,6 +82,7 @@ int main(int argc, char **argv) {
   pub_original = it.advertise("usc_mrp/camera/original", 1);
   pub_crop1 = it.advertise("usc_mrp/camera/crop1", 1);
   pub_crop2 = it.advertise("usc_mrp/camera/crop2", 1);
+  pub_quality1 = it.advertise("usc_mrp/camera/quality1", 1);
 
   ros::spin();
   

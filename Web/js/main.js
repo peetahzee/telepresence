@@ -10,6 +10,7 @@ var topicCmdVel;
 /* var paramAllowUserInput;
 var paramAllowControlInput; */
 var paramService;
+var userViewService;
 var publishTimer;
 
 function initialize() {
@@ -42,7 +43,7 @@ function setCmdVelTopic(topicName) {
 
 function setImageTopic(topicName, divElToHide, imgElToShow) {
 	 var topicImageRaw = new ros.Topic({
-	 	name: topicName,
+	 	name: '/usc_mrp/camera/' + topicName + '/compressed',
 		/* DEFAULT name: '/camera/rgb/image_color/compressed', */
 		messageType: 'sensor_msgs/CompressedImage'
 	}).subscribe(function(message) {
@@ -53,21 +54,22 @@ function setImageTopic(topicName, divElToHide, imgElToShow) {
 		parseImage(message.data, imgElToShow);
 	});
 
+	imgElToShow.parent().attr("data-viewName", topicName);
+	imgElToShow.click(function() {
+		userViewService.callService(new ros.ServiceRequest({
+			viewName : topicName
+		}), function() { });
+	});
+
 	return topicImageRaw;
 }
 
 function setParamService() {
 	paramService = new ros.Service({ name : '/usc_mrp/setParam', serviceType : '/usc_mrp/SetParam'});
 }
-/*
-function setAllowUserInputParam() {
-	paramAllowUserInput = new ros.Param({ name : 'allow_user_input'});
+function setUserViewService() {
+	userViewService = new ros.Service({ name : '/usc_mrp/setUserView', serviceType : '/usc_mrp/SetUserView'});
 }
-
-function setAllowControlInputParam() {
-	paramAllowControlInput = new ros.Param({ name : 'allow_control_input'});
-}
-*/
 
 function setUpDirectionButtons(directionButtonDiv) {
 	directionButtonDiv.mousedown(function() {
