@@ -15,6 +15,7 @@ var publishTimer;
 
 function initialize() {
 	ros = new ROS("ws://" + ROS_ADDRESS + ":" + ROS_PORT);
+	$.ros = ros; // attach to jQuery so that it is available to plug ins
 	$("#error").html("");
 
 	if(ros != undefined) {
@@ -33,7 +34,7 @@ function initialize() {
 }
 
 function setCmdVelTopic(topicName) {
-	topicCmdVel = new ros.Topic({
+	topicCmdVel = new $.ros.Topic({
 		name: topicName,
 		/* DEFAULT name: "/base_controller/command", */
 		messageType: "geometry_msgs/Twist" 
@@ -41,27 +42,13 @@ function setCmdVelTopic(topicName) {
 	return topicCmdVel;
 }
 
-function setImageTopic(topicName, divElToHide, imgElToShow) {
-	 var topicImageRaw = new ros.Topic({
-	 	name: '/usc_mrp/camera/' + topicName + '/compressed',
-		/* DEFAULT name: '/camera/rgb/image_color/compressed', */
-		messageType: 'sensor_msgs/CompressedImage'
-	}).subscribe(function(message) {
-		if(divElToHide != null) { divElToHide.hide(0); }
-		imgElToShow.show(0);
-		// $("#main div").hide(0);
-		// $("#main img").show(0);
-		parseImage(message.data, imgElToShow);
-	});
-
-	imgElToShow.parent().attr("data-viewName", topicName);
-	imgElToShow.click(function() {
-		userViewService.callService(new ros.ServiceRequest({
+function setImageTopic(elem, topicName, title) {
+	elem.ros_widget();
+	elem.ros_feed(title, topicName, function() {
+		userViewService.callService(new $.ros.ServiceRequest({
 			viewName : topicName
 		}), function() { });
 	});
-
-	return topicImageRaw;
 }
 
 function setParamService() {
@@ -153,6 +140,7 @@ function setUpDirectionButtons(directionButtonDiv) {
 }
 
 function setUpJoysticks(joystickDiv) {
+	joystickDiv.children("div").joystick();
 	joystickDiv.find("#left_joystick").on("joystickMove", function(e, deltaX, deltaY) {
 		// 27 = stickOffset
 		currentLinearX = -1 * deltaY / 27.0;
@@ -190,11 +178,5 @@ function publishCmdVel() {
 	// if there is a velocity, keep on publishing
 	if(currentLinearX != 0.0 || currentLinearY != 0.0 || currentAngular != 0.0) {
 		publishTimer = setTimeout('publishCmdVel()', 200);
-	}
-}
-
-function parseImage(data, imgEl) {
-	if(data != undefined) {
-		imgEl.attr("src", "data:image/jpeg;base64," + data);
 	}
 }

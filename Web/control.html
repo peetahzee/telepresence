@@ -1,9 +1,11 @@
 <html>
 	<head>
 		<title>Telepresence Control Panel</title>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="js/eventemitter2.js" type="text/javascript"></script>
 		<script src="js/ros.min.js" type="text/javascript"></script>
+		<script src="js/feed.js" type="text/javascript"></script>
+		<script src="js/widget.js" type="text/javascript"></script>
 		<script src="js/joystick.js" type="text/javascript"></script>
 		<script src="js/main.js" type="text/javascript"></script>
 		<script type="text/javascript">
@@ -15,11 +17,11 @@
 			setUserViewService();
 			
 			setCmdVelTopic("/usc_mrp/control_command");
-			setImageTopic("user", null, $("#main_feed img"));
-			setImageTopic("original", null, $("#feed_2 img"));
-			setImageTopic("crop1", null, $("#feed_3 img"));
-			setImageTopic("crop2", null, $("#feed_4 img"));
-			setImageTopic("quality1", null, $("#feed_5 img"));
+
+			setImageTopic($("#main_feed"), "user", "User View");
+			setImageTopic($("#feed_2"), "original", "Original");
+			setImageTopic($("#feed_3"), "crop1", "Crop 1");
+			setImageTopic($("#feed_4"), "crop2", "Crop 2");
 
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));
@@ -39,21 +41,28 @@
 					value : isChecked
 				}), function() { });
 			})
+
+			$("#addwidget").click(function() {
+				var newFeed = $('<div class="feed"></div>');
+				$("#feeds div.clear").before(newFeed);
+				setImageTopic(newFeed, "test", "Test");
+			});
 		});
 		</script>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<div id="control_bar">Control Panel</div>
+		<div id="control_bar">
+			Control Panel
+			<button id="addwidget">Add Feed</button>
+			<div class="clear"></div>
+		</div>
 		<div id="main">
 			<div id="feeds">
-				<div id="main_feed" class="feed"><img src="images/dummy.jpg" /><div>User View</div></div>
-				<div id="feed_2" class="feed"><img src="images/dummy.jpg" /><div>Original</div></div>
-				<div id="feed_3" class="feed"><img src="images/dummy.jpg" /><div>Crop 1</div></div>
-				<div id="feed_4" class="feed"><img src="images/dummy.jpg" /><div>Crop 2</div></div>
-				<div id="feed_5" class="feed"><img src="images/dummy.jpg" /><div>Bad Quality 1</div></div>
-				<div id="feed_6" class="feed"><img src="images/dummy.jpg" /></div>
-				<div id="feed_7" class="feed"><img src="images/dummy.jpg" /></div>
+				<div id="main_feed" class="feed"></div>
+				<div id="feed_2" class="feed"></div>
+				<div id="feed_3" class="feed"></div>
+				<div id="feed_4" class="feed"></div>
 				<div class="clear"></div>
 			</div>
 		</div>
