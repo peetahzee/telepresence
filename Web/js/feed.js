@@ -1,5 +1,4 @@
 (function($) {
-	var echod = false;
 	var methods = {
 		init: function(options) {
 			return this.each(function() {
@@ -18,8 +17,6 @@
 		},
 		parseImage: function(data) {
 			if(data != undefined) {
-				// console.log($(this).ros_widget('getContent'));
-				if(!echod) { console.log($(this).find(".widget_content img")); echod = true; }
 				$(this).find(".widget_content img").attr("src", "data:image/jpeg;base64," + data);
 			}
 		}, 
@@ -27,6 +24,7 @@
 			$(this).find(".feed_title").html(title);
 		},
 		changeTopic: function(topic) {
+			console.log("Hello");
 			$.fn.imageTopic.unsubscribe();
 			methods.setTopic.apply(this, [topic]);
 		},
@@ -35,7 +33,8 @@
 			$.fn.imageTopic = new $.ros.Topic({
 			 	name: '/usc_mrp/camera/' + topic + '/compressed',
 				messageType: 'sensor_msgs/CompressedImage'
-			}).subscribe(function(message) {
+			});
+			$.fn.imageTopic.subscribe(function(message) {
 				methods.parseImage.apply(base, [message.data]);
 			});
 			$(this).attr("data-viewName", topic);
