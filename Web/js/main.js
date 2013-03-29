@@ -42,12 +42,16 @@ function setCmdVelTopic(topicName) {
 	return topicCmdVel;
 }
 
-function setImageTopic(elem, topicName, title) {
-	elem.ros_widget();
-	elem.ros_feed(title, topicName, function() {
-		userViewService.callService(new $.ros.ServiceRequest({
-			viewName : topicName
-		}), function() { });
+function setImageTopic(elem, topicName, title, noEdit) {
+	elem.ros_widget({ noEdit: noEdit });
+	elem.ros_feed({
+			title: title, 
+			topic: topicName,
+			onclick: function() {
+			userViewService.callService(new $.ros.ServiceRequest({
+				viewName : topicName
+			}), function() { });
+		}
 	});
 }
 

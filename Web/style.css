@@ -162,11 +162,13 @@ html, body {
 }
 
 .widget_edit input {
-	width: 200px;
+	width: 220px;
 	padding: 5px;
 	font-size: 13px;
 	display:block;
 	margin-bottom: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
 }
 
 #control_bar {
@@ -183,6 +185,9 @@ html, body {
 	width: 100px;
 }
 
+#feeds #main_feed {
+	width: 640px;
+}
 #feeds #main_feed img{
 	height: auto;
 	width: 640px;
@@ -193,6 +198,7 @@ html, body {
 	margin-right: 10px;
 	margin-bottom: 10px;
 	padding: 20px 20px 10px;
+	width: 220px;
 	background: #333;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.9) inset, 5px 5px 5px rgba(0,0,0,0.7);
 	border: 1px solid #444;
@@ -209,14 +215,14 @@ html, body {
 	opacity: 0.8;
 }
 #feeds .feed img {
-	height: 20%;
-	width: auto;
+	height: auto;
+	width: 220px;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.8);
 }
 div.allow_inputs {
 	margin-bottom: 10px;
 }
-button {
+button, input[type=submit] {
 	background-color: #eeeeee;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #eeeeee), color-stop(100%, #cccccc));
 	border: 1px solid #ccc;
@@ -231,7 +237,7 @@ button {
 	width: 100%;
 	cursor: pointer;
 }
-button:hover {
+button:hover, input[type=submit]:hover {
 	background-color: #dddddd;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dddddd), color-stop(100%, #bbbbbb));
 	background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);

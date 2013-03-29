@@ -5,6 +5,8 @@
 		<script src="js/eventemitter2.js" type="text/javascript"></script>
 		<script src="js/ros.min.js" type="text/javascript"></script>
 		<script src="js/joystick.js" type="text/javascript"></script>
+		<script src="js/feed.js" type="text/javascript"></script>
+		<script src="js/widget.js" type="text/javascript"></script>
 		<script src="js/main.js" type="text/javascript"></script>
 
 		<script type="text/javascript">
@@ -12,7 +14,7 @@
 			//connect as soon as the document is done loading
 			initialize();
 			setCmdVelTopic("/usc_mrp/user_command");
-			setImageTopic("user", $("#main div"), $("#main img"));
+			setImageTopic($("#main_feed"), "user", "", true);
 
 			setUpDirectionButtons($("#direction_buttons div"))
 			setUpJoysticks($("#joystick"));
@@ -23,7 +25,9 @@
 	</head>
 	<body unselectable="on">
 		<div id="main">
-			<img src="images/dummy.jpg" />
+			<div id="feeds">
+				<div id="main_feed" class="feed"></div>
+			</div>
 		</div>
 		<div id="sidebar">
 			<div id="instructions">
