@@ -24,17 +24,16 @@
 			$(this).find(".feed_title").html(title);
 		},
 		changeTopic: function(topic) {
-			console.log("Hello");
-			$.fn.imageTopic.unsubscribe();
+			this.imageTopic.unsubscribe();
 			methods.setTopic.apply(this, [topic]);
 		},
 		setTopic: function(topic) {
 			var base = $(this);
-			$.fn.imageTopic = new $.ros.Topic({
+			this.imageTopic = new $.ros.Topic({
 			 	name: '/usc_mrp/camera/' + topic + '/compressed',
 				messageType: 'sensor_msgs/CompressedImage'
 			});
-			$.fn.imageTopic.subscribe(function(message) {
+			this.imageTopic.subscribe(function(message) {
 				methods.parseImage.apply(base, [message.data]);
 			});
 			$(this).attr("data-viewName", topic);
@@ -48,7 +47,7 @@
 		} else if ( typeof method === 'object' || ! method ) {
 			return methods.init.apply( this, arguments );
 		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+			$.error( 'Method ' +  method + ' does not exist on jQuery.rosfeed' );
 		}
 	};
 }) (jQuery);
