@@ -12,7 +12,6 @@
 				
 				methods.setTitle.apply(this, [options.title]);
 				methods.setTopic.apply(this, [options.topic]);
-				$(this).click(options.onclick);
 			});
 		},
 		parseImage: function(data) {

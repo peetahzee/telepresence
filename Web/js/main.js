@@ -43,15 +43,17 @@ function setCmdVelTopic(topicName) {
 }
 
 function setImageTopic(elem, topicName, title, noEdit) {
-	elem.ros_widget({ noEdit: noEdit });
-	elem.ros_feed({
-			title: title, 
-			topic: topicName,
-			onclick: function() {
+	elem.ros_widget({
+		noEdit: noEdit,
+		onClick: function() {
 			userViewService.callService(new $.ros.ServiceRequest({
 				viewName : topicName
 			}), function() { });
 		}
+	});
+	elem.ros_feed({
+		title: title, 
+		topic: topicName
 	});
 }
 

@@ -24,12 +24,18 @@
 						widgetEditButton.fadeOut(300);
 					}
 				});
+				$(this).click(function() {
+					if(!isEditMode && options.onClick) {
+						options.onClick.apply(this);
+					}
+				});
 				widgetEditButton.click(function() {
 					widgetContent.hide(300);
 					widgetEdit.show(300);
 					widgetEditButton.fadeOut(300);
 					widgetEdit.find("input")[0].focus();
 					isEditMode = true;
+					return false;
 				});
 
 				widgetEdit.find("form").submit(function(e) {
