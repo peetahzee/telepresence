@@ -4,10 +4,10 @@
 			return this.each(function() {
 				var isEditMode = false;
 				var base = $(this);
-				
 				var widgetContent = $('<div class="widget_content"></div>');
 				var widgetEdit = $('<div class="widget_edit"><form onsubmit="return false;"><input type="submit" value="Submit &gt;" /></form></div>');
 				var widgetEditButton = $('<div class="widget_edit_button">e</div>');
+
 				$(this).append(widgetContent);
 				if(!options.noEdit) {
 					$(this).append(widgetEdit);
